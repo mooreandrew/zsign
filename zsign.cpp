@@ -8,25 +8,25 @@
 #include <getopt.h>
 
 const struct option options[] = {
-	{ "debug",			no_argument,			NULL, 'd' },
-	{ "force",			no_argument,			NULL, 'f' },
-	{ "verbose",		no_argument,			NULL, 'v' },
-	{ "cert",			required_argument,		NULL, 'c' },
-	{ "pkey",			required_argument,		NULL, 'k' },
-	{ "prov",			required_argument,		NULL, 'm' },
-	{ "password",		required_argument,		NULL, 'p' },
-	{ "bundleid",		required_argument,		NULL, 'b' },
-	{ "bundlename",		required_argument,		NULL, 'n' },
-	{ "entitlements",	required_argument,		NULL, 'e' },
-	{ "output",			required_argument,		NULL, 'o' },
-	{ "ziplevel",		required_argument,		NULL, 'z' },
-	{ "dylib",			required_argument,		NULL, 'l' },
-	{ "weak",			no_argument,			NULL, 'w' },
-	{ "install",		no_argument,			NULL, 'i' },
-	{ "quiet",			no_argument,			NULL, 'q' },
-	{ "help",			no_argument,			NULL, 'h' },
-	{ }
-};
+	{"debug", no_argument, NULL, 'd'},
+	{"force", no_argument, NULL, 'f'},
+	{"verbose", no_argument, NULL, 'v'},
+	{"cert", required_argument, NULL, 'c'},
+	{"pkey", required_argument, NULL, 'k'},
+	{"prov", required_argument, NULL, 'm'},
+	{"password", required_argument, NULL, 'p'},
+	{"bundle_id", required_argument, NULL, 'b'},
+	{"bundle_name", required_argument, NULL, 'n'},
+	{"bundle_version", required_argument, NULL, 'r'},
+	{"entitlements", required_argument, NULL, 'e'},
+	{"output", required_argument, NULL, 'o'},
+	{"zip_level", required_argument, NULL, 'z'},
+	{"dylib", required_argument, NULL, 'l'},
+	{"weak", no_argument, NULL, 'w'},
+	{"install", no_argument, NULL, 'i'},
+	{"quiet", no_argument, NULL, 'q'},
+	{"help", no_argument, NULL, 'h'},
+	{}};
 
 int usage()
 {
@@ -39,10 +39,11 @@ int usage()
 	ZLog::Print("-f, --force\t\tForce sign without cache when signing folder.\n");
 	ZLog::Print("-o, --output\t\tPath to output ipa file.\n");
 	ZLog::Print("-p, --password\t\tPassword for private key or p12 file.\n");
-	ZLog::Print("-b, --bundleid\t\tNew bundle id to change.\n");
-	ZLog::Print("-n, --bundlename\tNew bundle name to change.\n");
+	ZLog::Print("-b, --bundle_id\t\tNew bundle id to change.\n");
+	ZLog::Print("-n, --bundle_name\tNew bundle name to change.\n");
+	ZLog::Print("-r, --bundle_version\tNew bundle version to change.\n");
 	ZLog::Print("-e, --entitlements\tNew entitlements to change.\n");
-	ZLog::Print("-z, --ziplevel\t\tCompressed level when output the ipa file. (0-9)\n");
+	ZLog::Print("-z, --zip_level\t\tCompressed level when output the ipa file. (0-9)\n");
 	ZLog::Print("-l, --dylib\t\tPath to inject dylib file.\n");
 	ZLog::Print("-w, --weak\t\tInject dylib as LC_LOAD_WEAK_DYLIB.\n");
 	ZLog::Print("-i, --install\t\tInstall ipa file using ideviceinstaller command for test.\n");
@@ -67,6 +68,7 @@ int main(int argc, char *argv[])
 	string strProvFile;
 	string strPassword;
 	string strBundleId;
+	string strBundleVersion;
 	string strDyLibFile;
 	string strOutputFile;
 	string strDisplayName;
@@ -99,6 +101,9 @@ int main(int argc, char *argv[])
 		case 'b':
 			strBundleId = optarg;
 			break;
+		case 'r':
+			strBundleVersion = optarg;
+			break;
 		case 'n':
 			strDisplayName = optarg;
 			break;
@@ -125,7 +130,7 @@ int main(int argc, char *argv[])
 			break;
 		case 'v':
 		{
-			printf("version: 0.2\n");
+			printf("version: 0.5\n");
 			return 0;
 		}
 		break;
@@ -168,8 +173,8 @@ int main(int argc, char *argv[])
 			ZMachO macho;
 			if (macho.Init(strPath.c_str()))
 			{
-				if(!strDyLibFile.empty())
-				{//inject dylib
+				if (!strDyLibFile.empty())
+				{ //inject dylib
 					bool bCreate = false;
 					macho.InjectDyLib(bWeakInject, strDyLibFile.c_str(), bCreate);
 				}
@@ -210,7 +215,7 @@ int main(int argc, char *argv[])
 
 	timer.Reset();
 	ZAppBundle bundle;
-	bool bRet = bundle.SignFolder(&zSignAsset, strFolder, strBundleId, strDisplayName, strDyLibFile, bForce, bWeakInject, bEnableCache);
+	bool bRet = bundle.SignFolder(&zSignAsset, strFolder, strBundleId, strBundleVersion, strDisplayName, strDyLibFile, bForce, bWeakInject, bEnableCache);
 	timer.PrintResult(bRet, ">>> Signed %s!", bRet ? "OK" : "Failed");
 
 	if (bInstall && strOutputFile.empty())

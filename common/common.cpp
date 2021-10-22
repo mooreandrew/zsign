@@ -25,11 +25,11 @@
 		}                                                       \
 	}
 
-
-bool IsRegularFile(const char *file) {
-    struct stat info;
-    stat(file, &info);
-    return S_ISREG(info.st_mode) ;
+bool IsRegularFile(const char *file)
+{
+	struct stat info;
+	stat(file, &info);
+	return S_ISREG(info.st_mode);
 }
 
 void *MapFile(const char *path, size_t offset, size_t size, size_t *psize, bool ro)
@@ -200,11 +200,11 @@ bool CreateFolder(const char *szFolder)
 {
 	if (!IsFolder(szFolder))
 	{
-	    #if defined(WINDOWS)
-	    return (0 == mkdir(szFolder));
-	    #else
+#if defined(WINDOWS)
+		return (0 == mkdir(szFolder));
+#else
 		return (0 == mkdir(szFolder, 0755));
-		#endif
+#endif
 	}
 	return false;
 }
@@ -293,7 +293,7 @@ string GetCanonicalizePath(const char *szPath)
 		{
 			char path[PATH_MAX] = {0};
 
-			#if defined(WINDOWS)
+#if defined(WINDOWS)
 
 			if (NULL != _fullpath((char *)"./", path, PATH_BUFFER_LENGTH))
 			{
@@ -301,15 +301,14 @@ string GetCanonicalizePath(const char *szPath)
 				strPath += "/";
 				strPath += szPath;
 			}
-			#else
+#else
 			if (NULL != realpath("./", path))
 			{
 				strPath = path;
 				strPath += "/";
 				strPath += szPath;
 			}
-			#endif
-
+#endif
 		}
 		StringReplace(strPath, "/./", "/");
 	}
@@ -429,7 +428,7 @@ bool SystemExec(const char *szFormatCmd, ...)
 	}
 	else
 	{
-	    #if !defined(WINDOWS)
+#if !defined(WINDOWS)
 		if (WIFEXITED(status))
 		{
 			if (0 == WEXITSTATUS(status))
@@ -446,7 +445,7 @@ bool SystemExec(const char *szFormatCmd, ...)
 		{
 			return true;
 		}
-		#endif
+#endif
 	}
 	return false;
 }
@@ -593,7 +592,7 @@ bool SHASum(const string &strData, string &strSHA1, string &strSHA256)
 bool SHASumFile(const char *szFile, string &strSHA1, string &strSHA256)
 {
 	size_t sSize = 0;
-	uint8_t *pBase = (uint8_t *)MapFile(szFile, 0, 0, &sSize, false);
+	uint8_t *pBase = (uint8_t *)MapFile(szFile, 0, 0, &sSize, true);
 
 	SHASum(E_SHASUM_TYPE_1, pBase, sSize, strSHA1);
 	SHASum(E_SHASUM_TYPE_256, pBase, sSize, strSHA256);

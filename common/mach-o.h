@@ -457,6 +457,7 @@ enum {
 	CSMAGIC_EMBEDDED_SIGNATURE = 0xfade0cc0, /* embedded form of signature data */
 	CSMAGIC_EMBEDDED_SIGNATURE_OLD = 0xfade0b02,	/* XXX */
 	CSMAGIC_EMBEDDED_ENTITLEMENTS = 0xfade7171,	/* embedded entitlements */
+	CSMAGIC_EMBEDDED_DER_ENTITLEMENTS = 0xfade7172, /* der format entitlements */
 	CSMAGIC_DETACHED_SIGNATURE = 0xfade0cc1, /* multi-arch collection of embedded signatures */
 	CSMAGIC_BLOBWRAPPER = 0xfade0b01,	/* CMS Signature, among other things */
 	CS_SUPPORTSSCATTER = 0x20100,
@@ -469,6 +470,7 @@ enum {
 	CSSLOT_RESOURCEDIR = 3,
 	CSSLOT_APPLICATION = 4,
 	CSSLOT_ENTITLEMENTS = 5,
+	CSSLOT_DER_ENTITLEMENTS = 7,                /* der format entitlement type */
 	CSSLOT_ALTERNATE_CODEDIRECTORIES = 0x1000, /* first alternate CodeDirectory, if any */
 	CSSLOT_ALTERNATE_CODEDIRECTORY_MAX = 5,		/* max number of alternate CD slots */
 	CSSLOT_ALTERNATE_CODEDIRECTORY_LIMIT = CSSLOT_ALTERNATE_CODEDIRECTORIES + CSSLOT_ALTERNATE_CODEDIRECTORY_MAX, /* one past the last */
@@ -486,12 +488,16 @@ enum {
 	CS_SHA256_TRUNCATED_LEN = 20,
 	CS_CDHASH_LEN = 20,						/* always - larger hashes are truncated */
 	CS_HASH_MAX_SIZE = 48, /* max size of the hash we'll support */
+	CS_EXECSEG_MAIN_BINARY = 0x1,
+	CS_EXECSEG_ALLOW_UNSIGNED = 0x10,
+
 /*
  * Currently only to support Legacy VPN plugins,
  * but intended to replace all the various platform code, dev code etc. bits.
  */
 	CS_SIGNER_TYPE_UNKNOWN = 0,
 	CS_SIGNER_TYPE_LEGACYVPN = 5,
+
 };
 
 #pragma pack(push, 1)

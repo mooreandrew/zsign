@@ -365,7 +365,7 @@ private:
 	void endLabel(Token &token, const char *szLabel);
 
 	bool decodeNumber(Token &token, JValue &jval);
-	bool decodeString(Token &token, string &decoded);
+	bool decodeString(Token &token, string &decoded, bool filter = true);
 	bool decodeDouble(Token &token, JValue &jval);
 
 	void skipSpaces();
