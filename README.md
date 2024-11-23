@@ -1,15 +1,16 @@
-<div align="center">
-
-
-# zsign ✔️
-
-Maybe is the most quickly codesign alternative for iOS12+ in the world, cross-platform  **Linux**, **macOS** & **Windows** , more features.
+Maybe it is the most quickly codesign alternative for iOS12+, cross-platform  **Linux**, **macOS** & **Windows** , more features.
 If this tool can help you, please don't forget to <font color=#FF0000 size=5>🌟**star**🌟</font> [Me](https://github.com/zhlynn).
-</div>
-<br>
+## Compile on macOS:
 
+```bash
+brew install openssl
+```
+and then (attention to replace your openssl version)
+```bash
+g++ *.cpp common/*.cpp -lcrypto -I/usr/local/Cellar/openssl@1.1/1.1.1k/include -L/usr/local/Cellar/openssl@1.1/1.1.1k/lib -O3 -o zsign
+```
 
-## Compile on linux distributions:
+## Compile on Linux:
 
 #### Ubuntu:
 
@@ -28,21 +29,6 @@ yum install git
 git clone https://github.com/zhlynn/zsign.git; cd zsign && chmod +x INSTALL.sh &&
 ./INSTALL.sh
 ```
-
-
-
-## Compile on MacOs:
-
-You must install zlib libraries at first using command bellow.
-```bash
-xcode-select --install
-```
-and then
-
-```bash
-brew install git && git clone https://github.com/gyke69/zsign.git; cd zsign && chmod +x INSTALL.sh && ./INSTALL.sh
-```
-
 
 
 #### Compile on Windows/MingW:
@@ -64,7 +50,7 @@ apt-get install mingw-w64
 ```bash
 git clone git@github.com:witwall/mman-win32
 cd mman-win32
-./configure ----cross-prefix=x86_64-w64-mingw32-
+./configure --cross-prefix=x86_64-w64-mingw32-
 make
 ```
 
@@ -73,7 +59,7 @@ make
 git clone github.com:openssl/openssl
 cd openssl
 git checkout OpenSSL_1_0_2s
-./Configure --cross-compile-prefix=x86_64-w64-mingw32 mingw64
+./Configure --cross-compile-prefix=x86_64-w64-mingw32- mingw64
 make
 
 ```
@@ -81,13 +67,13 @@ make
 4. Build zsign
 ```bash
 x86_64-w64-mingw32-g++  \
-*.cpp common/*.cpp -o zsign.exe
--lcrypto -I../mman-win32
--std=c++11  -I../openssl/include/
--DWINDOWS -L../openssl
--L../mman-win32
--lmman -lgdi32
--m64 -static -static-libgcc
+*.cpp common/*.cpp -o zsign.exe  \
+-lcrypto -I../mman-win32  \
+-std=c++11  -I../openssl/include/  \
+-DWINDOWS -L../openssl  \
+-L../mman-win32  \
+-lmman -lgdi32  \
+-m64 -static -static-libgcc -lws2_32
 ```
 
 ## Optional Compile:
@@ -111,7 +97,7 @@ or
 g++ *.cpp common/*.cpp -std=gnu++11 -lcrypto -O3 -o zsign
 ```
 
-## Compile usign xmake:
+## Compile zsign xmake:
 
 If you have [xmake](https://xmake.io) installed, you can use xmake to quickly compile and run it.
 
@@ -141,7 +127,7 @@ xmake install -o outputdir
 
 binary: `outputdir/bin/zsign`
 
-## Compile usign Docker:
+## Compile using Docker:
 
 1. Build:
 ```
@@ -169,8 +155,8 @@ docker run -v $PWD:/out --rm --entrypoint /bin/cp zsign zsign /out
 ```
 <br>
 
-## 中文编译教程 - Compile tutorial in Chinese.
-- [点击我 - Click me](https://blog.csdn.net/a513436535/article/details/108539238)
+## Compile tutorial in Chinese.
+- https://blog.csdn.net/a513436535/article/details/108539238
 
   <br>
   
@@ -240,10 +226,7 @@ options:
 ```bash
 ./zsign -w -l "@executable_path/demo.dylib" demo.app/execute
 ```
-
-
-## Very useful tip:
-#### How to sign quickly?
+## How to sign quickly?
 
 You can unzip the ipa file at first, and then using zsign to sign folder with assets.
 At the first time of sign, zsign will perform the complete signing and cache the signed info into *.zsign_cache* dir at the current path.
